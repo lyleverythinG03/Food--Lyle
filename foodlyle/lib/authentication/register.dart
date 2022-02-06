@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodlyle/global/global.dart';
 import 'package:foodlyle/mainScreens/home_screen.dart';
 import 'package:foodlyle/widgets/custom_text_field.dart';
 import 'package:foodlyle/widgets/error_dialog.dart';
@@ -124,7 +125,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void authenticateSellerAndSignUp() async {
     User? currentUser;
-    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
       await firebaseAuth
           .createUserWithEmailAndPassword(

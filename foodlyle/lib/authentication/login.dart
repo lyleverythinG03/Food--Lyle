@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodlyle/global/global.dart';
+import 'package:foodlyle/mainScreens/home_screen.dart';
 import 'package:foodlyle/widgets/custom_text_field.dart';
+import 'package:foodlyle/widgets/error_dialog.dart';
+import 'package:foodlyle/widgets/loading_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -12,6 +18,87 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  formValidation() {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      //login
+      loginNow();
+    }
+    //show error dialog
+    else {
+      showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+              message: 'Please write Email/Password',
+            );
+          });
+    }
+  }
+
+  loginNow() async {
+    showDialog(
+      context: context,
+      builder: (c) {
+        return LoadingDialog(
+          message: 'Checking credentials',
+        );
+      },
+    );
+    User? currentUser;
+    await firebaseAuth
+        .signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        )
+        .then((auth) => {
+              currentUser = auth.user!,
+            })
+        .catchError((error) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+              message: error.message.toString(),
+            );
+          });
+    });
+    if (currentUser != null) {
+      readDataAndSetDataLocally(currentUser!).then(
+        (value) => {
+          Navigator.pop(context),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (c) => const HomeScreen(),
+            ),
+          )
+        },
+      );
+    }
+  }
+
+  Future readDataAndSetDataLocally(User currentUser) async {
+    await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(currentUser.uid)
+        .get()
+        .then((snapshot) => {
+              sharedPreferences!.setString("uid", currentUser.uid),
+              sharedPreferences!
+                  .setString("sellerEmail", emailController.text.trim()),
+              sharedPreferences!
+                  .setString("name", snapshot.data()!["sellerName"]),
+              sharedPreferences!
+                  .setString("photoUrl", snapshot.data()!["sellerAvatarUrl"]),
+              sharedPreferences!.setString("phone", snapshot.data()!["phone"]),
+              sharedPreferences!
+                  .setString("address", snapshot.data()!["address"]),
+              sharedPreferences!.setDouble("lat", snapshot.data()!["lat"]),
+              sharedPreferences!.setDouble("long", snapshot.data()!["long"]),
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -55,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
             ),
             onPressed: () {
-              print("clicked");
+              formValidation();
             },
           ),
           const SizedBox(
