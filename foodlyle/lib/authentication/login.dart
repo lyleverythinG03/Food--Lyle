@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodlyle/authentication/auth_screen.dart';
 import 'package:foodlyle/global/global.dart';
 import 'package:foodlyle/mainScreens/home_screen.dart';
 import 'package:foodlyle/widgets/custom_text_field.dart';
@@ -64,17 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
           });
     });
     if (currentUser != null) {
-      readDataAndSetDataLocally(currentUser!).then(
-        (value) => {
-          Navigator.pop(context),
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (c) => const HomeScreen(),
-            ),
-          )
-        },
-      );
+      readDataAndSetDataLocally(currentUser!);
     }
   }
 
@@ -83,20 +74,52 @@ class _LoginScreenState extends State<LoginScreen> {
         .collection("sellers")
         .doc(currentUser.uid)
         .get()
-        .then((snapshot) => {
-              sharedPreferences!.setString("uid", currentUser.uid),
-              sharedPreferences!
-                  .setString("sellerEmail", emailController.text.trim()),
-              sharedPreferences!
-                  .setString("name", snapshot.data()!["sellerName"]),
-              sharedPreferences!
-                  .setString("photoUrl", snapshot.data()!["sellerAvatarUrl"]),
-              sharedPreferences!.setString("phone", snapshot.data()!["phone"]),
-              sharedPreferences!
-                  .setString("address", snapshot.data()!["address"]),
-              sharedPreferences!.setDouble("lat", snapshot.data()!["lat"]),
-              sharedPreferences!.setDouble("long", snapshot.data()!["long"]),
-            });
+        .then(
+          (snapshot) => {
+            if (snapshot.exists)
+              {
+                sharedPreferences!.setString("uid", currentUser.uid),
+                sharedPreferences!
+                    .setString("sellerEmail", emailController.text.trim()),
+                sharedPreferences!
+                    .setString("name", snapshot.data()!["sellerName"]),
+                sharedPreferences!
+                    .setString("photoUrl", snapshot.data()!["sellerAvatarUrl"]),
+                sharedPreferences!
+                    .setString("phone", snapshot.data()!["phone"]),
+                sharedPreferences!
+                    .setString("address", snapshot.data()!["address"]),
+                sharedPreferences!.setDouble("lat", snapshot.data()!["lat"]),
+                sharedPreferences!.setDouble("long", snapshot.data()!["long"]),
+                Navigator.pop(context),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => const HomeScreen(),
+                  ),
+                ),
+              }
+            else
+              {
+                firebaseAuth.signOut(),
+                Navigator.pop(context),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => const AuthScreen(),
+                  ),
+                ),
+                showDialog(
+                  context: context,
+                  builder: (c) {
+                    return ErrorDialog(
+                      message: 'No record found',
+                    );
+                  },
+                ),
+              }
+          },
+        );
   }
 
   @override
@@ -120,13 +143,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   data: Icons.email,
                   controller: emailController,
                   hintText: "Email",
-                  isObscure: true,
+                  isObscure: false,
                 ),
                 CustomTextField(
                   data: Icons.lock,
                   controller: passwordController,
                   hintText: "Password",
-                  isObscure: false,
+                  isObscure: true,
                 ),
               ],
             ),
