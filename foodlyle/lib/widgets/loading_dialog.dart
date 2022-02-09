@@ -4,7 +4,7 @@ import 'package:foodlyle/widgets/progress_bar.dart';
 class LoadingDialog extends StatelessWidget {
   final String? message;
 
-  LoadingDialog({this.message});
+  const LoadingDialog({this.message, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

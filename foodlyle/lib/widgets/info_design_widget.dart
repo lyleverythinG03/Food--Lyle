@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodlyle/mainScreens/items_screen.dart';
 import 'package:foodlyle/model/menus.dart';
 
 class InformationDesignWidget extends StatefulWidget {
@@ -16,6 +17,14 @@ class _InformationDesignWidgetState extends State<InformationDesignWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (c) => ItemsScreen(model: widget.model),
+          ),
+        );
+      },
       splashColor: Colors.amber,
       child: Padding(
         padding: const EdgeInsets.all(

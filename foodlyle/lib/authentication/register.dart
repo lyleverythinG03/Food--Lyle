@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showDialog(
         context: context,
         builder: (c) {
-          return ErrorDialog(
+          return const ErrorDialog(
             message: "Please select an image ",
           );
         },
@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           showDialog(
             context: context,
             builder: (c) {
-              return LoadingDialog(
+              return const LoadingDialog(
                 message: "Registering Account",
               );
             },
@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           showDialog(
             context: context,
             builder: (c) {
-              return ErrorDialog(
+              return const ErrorDialog(
                 message: "Please complete the required info",
               );
             },
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         showDialog(
           context: context,
           builder: (c) {
-            return ErrorDialog(
+            return const ErrorDialog(
               message: "Password doesn't match ",
             );
           },

@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       showDialog(
           context: context,
           builder: (c) {
-            return ErrorDialog(
+            return const ErrorDialog(
               message: 'Please write Email/Password',
             );
           });
@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (c) {
-        return LoadingDialog(
+        return const LoadingDialog(
           message: 'Checking credentials',
         );
       },
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 showDialog(
                   context: context,
                   builder: (c) {
-                    return ErrorDialog(
+                    return const ErrorDialog(
                       message: 'No record found',
                     );
                   },
