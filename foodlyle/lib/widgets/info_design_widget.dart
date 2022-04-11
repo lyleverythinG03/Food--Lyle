@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foodlyle/global/global.dart';
 import 'package:foodlyle/mainScreens/items_screen.dart';
 import 'package:foodlyle/model/menus.dart';
 
@@ -14,6 +17,17 @@ class InformationDesignWidget extends StatefulWidget {
 }
 
 class _InformationDesignWidgetState extends State<InformationDesignWidget> {
+  deleteMenu(String menuID) {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("menus")
+        .doc(menuID)
+        .delete();
+
+    Fluttertoast.showToast(msg: 'Menu Deleted Successfully');
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -48,13 +62,25 @@ class _InformationDesignWidgetState extends State<InformationDesignWidget> {
               const SizedBox(
                 height: 1.0,
               ),
-              Text(
-                widget.model!.menuTitle!,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 40,
-                  fontFamily: "Signatra",
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.model!.menuTitle!,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 40,
+                      fontFamily: "Signatra",
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_sweep),
+                    onPressed: () {
+                      // to delete a specific menu
+                      deleteMenu(widget.model!.menuID!);
+                    },
+                  ),
+                ],
               ),
               Text(
                 widget.model!.menuInfo!,
