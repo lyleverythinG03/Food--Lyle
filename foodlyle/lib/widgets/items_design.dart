@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foodlyle/mainScreens/item_detail_screen.dart';
 import 'package:foodlyle/mainScreens/items_screen.dart';
 import 'package:foodlyle/model/items.dart';
 import 'package:foodlyle/model/menus.dart';
 
 class ItemsDesignWidget extends StatefulWidget {
+  // this widget is for display Items with onTap
   final Items? model;
   final BuildContext? context;
   const ItemsDesignWidget({Key? key, this.model, this.context})
@@ -18,12 +20,12 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (c) => ItemsScreen(model: widget.model),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (c) => ItemDetailScreen(model: widget.model),
+          ),
+        );
       },
       splashColor: Colors.amber,
       child: Padding(
