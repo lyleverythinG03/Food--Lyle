@@ -101,9 +101,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 fontSize: 16, color: Colors.grey),
                           ),
                         ),
-                        orderStatus == "ended"
-                            ? Image.asset("images/success.jpg")
-                            : Image.asset("images/confirm_pick.png"),
+                        orderStatus != "ended"
+                            ? Image.asset("images/packing.png")
+                            : Image.asset("images/delivered.jpg"),
                         const Divider(
                           thickness: 4,
                         ),

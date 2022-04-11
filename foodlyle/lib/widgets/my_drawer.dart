@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodlyle/authentication/auth_screen.dart';
 import 'package:foodlyle/global/global.dart';
+import 'package:foodlyle/mainScreens/history_screen.dart';
 import 'package:foodlyle/mainScreens/home_screen.dart';
 import 'package:foodlyle/mainScreens/new_orders_screen.dart';
 
@@ -141,7 +142,12 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // print('clicked');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (c) => const HistoryScreen(),
+                ),
+              );
             },
           ),
           const Divider(
