@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodlyle/authentication/auth_screen.dart';
 import 'package:foodlyle/global/global.dart';
+import 'package:foodlyle/mainScreens/earnings_screen.dart';
 import 'package:foodlyle/mainScreens/history_screen.dart';
 import 'package:foodlyle/mainScreens/home_screen.dart';
 import 'package:foodlyle/mainScreens/new_orders_screen.dart';
@@ -101,7 +102,14 @@ class MyDrawer extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (c) => const EarningsScreen(),
+                ),
+              );
+            },
           ),
           const Divider(
             height: 10,
