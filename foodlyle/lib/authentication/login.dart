@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foodlyle/authentication/auth_screen.dart';
 import 'package:foodlyle/global/global.dart';
 import 'package:foodlyle/mainScreens/home_screen.dart';
@@ -78,26 +79,38 @@ class _LoginScreenState extends State<LoginScreen> {
           (snapshot) => {
             if (snapshot.exists)
               {
-                sharedPreferences!.setString("uid", currentUser.uid),
-                sharedPreferences!
-                    .setString("sellerEmail", emailController.text.trim()),
-                sharedPreferences!
-                    .setString("name", snapshot.data()!["sellerName"]),
-                sharedPreferences!
-                    .setString("photoUrl", snapshot.data()!["sellerAvatarUrl"]),
-                sharedPreferences!
-                    .setString("phone", snapshot.data()!["phone"]),
-                sharedPreferences!
-                    .setString("address", snapshot.data()!["address"]),
-                sharedPreferences!.setDouble("lat", snapshot.data()!["lat"]),
-                sharedPreferences!.setDouble("long", snapshot.data()!["long"]),
-                Navigator.pop(context),
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (c) => const HomeScreen(),
-                  ),
-                ),
+                if (snapshot.data()!["status"] == "approved")
+                  {
+                    sharedPreferences!.setString("uid", currentUser.uid),
+                    sharedPreferences!
+                        .setString("sellerEmail", emailController.text.trim()),
+                    sharedPreferences!
+                        .setString("name", snapshot.data()!["sellerName"]),
+                    sharedPreferences!.setString(
+                        "photoUrl", snapshot.data()!["sellerAvatarUrl"]),
+                    sharedPreferences!
+                        .setString("phone", snapshot.data()!["phone"]),
+                    sharedPreferences!
+                        .setString("address", snapshot.data()!["address"]),
+                    sharedPreferences!
+                        .setDouble("lat", snapshot.data()!["lat"]),
+                    sharedPreferences!
+                        .setDouble("long", snapshot.data()!["long"]),
+                    Navigator.pop(context),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => const HomeScreen(),
+                      ),
+                    ),
+                  }
+                else
+                  {
+                    firebaseAuth.signOut(),
+                    Navigator.pop(context),
+                    Fluttertoast.showToast(
+                        msg: "account blocked, email to admin1@gmail.com"),
+                  }
               }
             else
               {
